@@ -13,18 +13,16 @@
 
     <style>
         body {
-            background-color: #F3F4FA; /* Светло лилаво със синкав оттенък */
+            background-color: #F3F4FA;
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             height: 100vh;
             width: 100vw;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        h1, .logo-text, .comfortaa {
-            font-family: 'Comfortaa', cursive;
-        }
+        h1, .logo-text, .comfortaa { font-family: 'Comfortaa', cursive; }
 
-        /* Стъклен ефект (Glassmorphism) */
         .glass-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(15px);
@@ -33,34 +31,19 @@
             box-shadow: 0 25px 50px -12px rgba(14, 42, 71, 0.15);
         }
 
-        /* Полета за въвеждане */
-        .input-field {
-            background-color: #F0F2F8;
-            transition: all 0.3s ease;
-        }
-        .input-field:focus {
-            background-color: #ffffff;
-            box-shadow: 0 0 0 2px #0e2a47;
-        }
+        .input-field { background-color: #F0F2F8; transition: all 0.3s ease; }
+        .input-field:focus { background-color: #ffffff; box-shadow: 0 0 0 2px #0e2a47; }
 
-        /* Динамичен фон с шахматна мрежа */
         #bg-container {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            display: grid;
-            opacity: 0.12;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; display: grid; opacity: 0.12;
+            pointer-events: none;
         }
 
         .bg-symbol {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #0e2a47;
-            animation: floatAnim 10s ease-in-out infinite;
-            user-select: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #0e2a47;
+            animation: floatAnim 10s ease-in-out infinite; user-select: none;
         }
 
         @keyframes floatAnim {
@@ -69,21 +52,16 @@
             66% { transform: translate(-8px, 8px) rotate(-8deg) scale(0.9); }
         }
 
-        /* Сегментиран бутон */
-        .segment-btn.active {
-            background-color: #0e2a47;
-            color: white;
-        }
-
+        .segment-btn.active { background-color: #0e2a47; color: white; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Modal Styles */
+        #ios-modal {
+            background: rgba(14, 42, 71, 0.85);
+            backdrop-filter: blur(8px);
         }
     </style>
 </head>
@@ -94,23 +72,22 @@
     <main class="w-full max-w-md h-[90vh] sm:h-auto glass-card rounded-[2.5rem] flex flex-col p-6 relative z-10">
         
         <header class="flex items-center justify-between mb-8">
-            <div class="flex items-center justify-between mb-6">
-    <div class="flex items-center gap-3">
-        <div id="logo-container" class="w-12 h-12 rounded-xl shadow-md overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#40E0D0] to-[#5B9BD5]">
-            <span class="text-white font-bold text-sm tracking-tighter comfortaa">€⇄лв</span>
-        </div>
-        <div>
-            <h1 class="text-2xl font-bold text-navy tracking-tight">DualPay</h1>
-            <p class="text-xs text-slate-500 font-medium tracking-wide">Калкулатор</p>
-        </div>
-    </div>
-    
-    <button id="install-button" class="hidden bg-navy text-white p-2 rounded-xl shadow-lg active:scale-95 transition-transform">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-        </svg>
-    </button>
-</div>
+            <div class="flex items-center gap-3">
+                <div id="logo-container" class="w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center bg-gradient-to-br from-[#40E0D0] to-[#5B9BD5]">
+                    <span class="text-white font-bold text-xs comfortaa">€⇄лв</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-[#0e2a47] leading-none">DualPay</h1>
+                    <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest mt-1">Change Calc</p>
+                </div>
+            </div>
+            
+            <button id="install-button" class="flex items-center gap-2 bg-[#0e2a47] text-white px-3 py-2 rounded-2xl shadow-lg active:scale-90 transition-transform hover:bg-[#1a3b5e]">
+                <span class="text-[10px] font-bold uppercase tracking-wide hidden sm:inline">Инсталирай</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+            </button>
         </header>
 
         <div class="flex-1 overflow-y-auto no-scrollbar space-y-6">
@@ -177,14 +154,33 @@
         </footer>
     </main>
 
+    <div id="ios-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div class="text-center space-y-4">
+                <div class="w-16 h-16 bg-slate-100 rounded-2xl mx-auto flex items-center justify-center">
+                    <svg class="w-8 h-8 text-[#0e2a47]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-[#0e2a47] comfortaa">Инсталация</h3>
+                <p id="install-text" class="text-sm text-slate-600 leading-relaxed">
+                    За да инсталирате приложението:<br>
+                    1. Натиснете бутона <b>Share</b> (Сподели)<br>
+                    2. Изберете <b>Add to Home Screen</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script>
         const RATE = 1.95583;
-        let deferredPrompt;
         const state = { dueCurr: 'BGN', resCurr: 'BGN' };
 
-        // Инициализация на фона
+        // --- BACKGROUND ---
         function initBg() {
             const container = document.getElementById('bg-container');
+            container.innerHTML = '';
             const cols = Math.ceil(window.innerWidth / 60);
             const rows = Math.ceil(window.innerHeight / 60);
             container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
@@ -198,7 +194,7 @@
             }
         }
 
-        // Изчисления
+        // --- CALCULATOR LOGIC ---
         function calc() {
             const total = parseFloat(document.getElementById('input-total').value) || 0;
             const bgn = parseFloat(document.getElementById('paid-bgn').value) || 0;
@@ -239,7 +235,6 @@
             document.getElementById('res-sym-sec').textContent = ss;
         }
 
-        // Events
         document.querySelectorAll('.curr-toggle').forEach(btn => {
             btn.onclick = (e) => {
                 state.dueCurr = e.target.dataset.curr;
@@ -260,24 +255,56 @@
 
         document.querySelectorAll('input').forEach(i => i.oninput = calc);
 
-        // PWA & Install Logic
+        // --- PWA INSTALLATION LOGIC (REVISED) ---
+        let deferredPrompt;
         const installBtn = document.getElementById('install-button');
+        const modal = document.getElementById('ios-modal');
+        const closeModal = document.getElementById('close-modal');
+        const installText = document.getElementById('install-text');
 
+        // Detect Platform
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+        // Ако е вече инсталирано, скрий бутона
+        if (isStandalone) {
+            installBtn.style.display = 'none';
+        }
+
+        // Logic for "BeforeInstallPrompt" (Android/Chrome/Desktop)
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installBtn.classList.remove('hidden');
+            // Бутонът е видим по подразбиране, но тук сме сигурни, че ще работи нативно
+            console.log("Install prompt captured");
         });
 
-        installBtn.onclick = async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.classList.add('hidden');
-            deferredPrompt = null;
-        };
+        // Click Handler
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Native Install
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    deferredPrompt = null;
+                    installBtn.style.display = 'none';
+                }
+            } else {
+                // Manual / iOS / Fallback Logic
+                modal.classList.remove('hidden');
+                
+                if (isIOS) {
+                    installText.innerHTML = `На iOS: Натиснете бутона <b>Share</b> <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg> и изберете <b>Add to Home Screen</b>.`;
+                } else {
+                    installText.innerHTML = `За да инсталирате:<br>Отворете този сайт през <b>Chrome</b> или <b>Edge</b> и се уверете, че не е в Incognito режим.<br><br><small class='text-xs text-slate-400'>Забележка: Локално отворени файлове (file://) не могат да се инсталират директно.</small>`;
+                }
+            }
+        });
 
-        // Service Worker & Manifest
+        closeModal.onclick = () => modal.classList.add('hidden');
+        modal.onclick = (e) => { if(e.target === modal) modal.classList.add('hidden'); }
+
+        // --- SETUP PWA ASSETS ---
         function setupPWA() {
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
@@ -287,16 +314,24 @@
             ctx.fillStyle = grd;
             ctx.beginPath(); ctx.roundRect(0, 0, 512, 512, 100); ctx.fill();
             ctx.fillStyle = "white"; ctx.font = "bold 140px Comfortaa";
-            ctx.textAlign = "center"; ctx.fillText("€⇄лв", 256, 280);
+            ctx.textAlign = "center"; ctx.textBaseline = "middle"; 
+            ctx.fillText("€⇄лв", 256, 256);
             const icon = canvas.toDataURL();
 
+            // Link Favicon
+            let linkFav = document.createElement('link');
+            linkFav.rel = 'icon'; linkFav.href = icon;
+            document.head.appendChild(linkFav);
+            
+            // Generate Manifest
             const manifest = {
-                name: "DualPay Change",
+                name: "DualPay Calculator",
                 short_name: "DualPay",
                 start_url: ".",
                 display: "standalone",
                 background_color: "#F3F4FA",
                 theme_color: "#0e2a47",
+                orientation: "portrait",
                 icons: [{ src: icon, sizes: "512x512", type: "image/png" }]
             };
 
@@ -305,52 +340,21 @@
             link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
             document.head.appendChild(link);
 
+            // Register Service Worker
             if ('serviceWorker' in navigator) {
-                const sw = `self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));`;
+                // Minimal caching SW
+                const sw = `
+                    self.addEventListener('install', e => self.skipWaiting());
+                    self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
+                `;
                 const swBlob = new Blob([sw], {type: 'application/javascript'});
-                navigator.serviceWorker.register(URL.createObjectURL(swBlob));
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob))
+                    .catch(err => console.log('SW Error:', err));
             }
         }
 
         window.onload = () => { initBg(); setupPWA(); };
-        window.onresize = () => { document.getElementById('bg-container').innerHTML = ''; initBg(); };
-        // --- PWA INSTALL LOGIC ---
-let deferredPrompt;
-const installBtn = document.getElementById('install-button');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Предотвратяваме автоматичното показване на системния диалог
-    e.preventDefault();
-    // Запазваме събитието, за да го задействаме по-късно
-    deferredPrompt = e;
-    // Показваме нашия бутон за инсталиране
-    installBtn.classList.remove('hidden');
-});
-
-installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    
-    // Показваме системния прозорец за инсталация
-    deferredPrompt.prompt();
-    
-    // Чакаме отговора на потребителя
-    const { outcome } = await deferredPrompt.userChoice;
-    
-    if (outcome === 'accepted') {
-        console.log('Потребителят инсталира приложението');
-    }
-    
-    // Скриваме бутона, тъй като вече е използван
-    deferredPrompt = null;
-    installBtn.classList.add('hidden');
-});
-
-// Скриване на бутона, ако приложението вече е инсталирано
-window.addEventListener('appinstalled', () => {
-    installBtn.classList.add('hidden');
-    deferredPrompt = null;
-});
-
+        window.onresize = () => { initBg(); };
     </script>
 </body>
 </html>
