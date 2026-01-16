@@ -94,21 +94,23 @@
     <main class="w-full max-w-md h-[90vh] sm:h-auto glass-card rounded-[2.5rem] flex flex-col p-6 relative z-10">
         
         <header class="flex items-center justify-between mb-8">
-            <div class="flex items-center gap-3">
-                <div id="logo-container" class="w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center bg-gradient-to-br from-[#40E0D0] to-[#5B9BD5]">
-                    <span class="text-white font-bold text-xs comfortaa">€⇄лв</span>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-[#0e2a47] leading-none">DualPay</h1>
-                    <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest mt-1">Change Calc</p>
-                </div>
-            </div>
-            
-            <button id="install-button" class="hidden bg-[#0e2a47] text-white p-3 rounded-2xl shadow-xl active:scale-90 transition-transform">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-            </button>
+            <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-3">
+        <div id="logo-container" class="w-12 h-12 rounded-xl shadow-md overflow-hidden flex items-center justify-center bg-gradient-to-br from-[#40E0D0] to-[#5B9BD5]">
+            <span class="text-white font-bold text-sm tracking-tighter comfortaa">€⇄лв</span>
+        </div>
+        <div>
+            <h1 class="text-2xl font-bold text-navy tracking-tight">DualPay</h1>
+            <p class="text-xs text-slate-500 font-medium tracking-wide">Калкулатор</p>
+        </div>
+    </div>
+    
+    <button id="install-button" class="hidden bg-navy text-white p-2 rounded-xl shadow-lg active:scale-95 transition-transform">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+        </svg>
+    </button>
+</div>
         </header>
 
         <div class="flex-1 overflow-y-auto no-scrollbar space-y-6">
@@ -312,6 +314,43 @@
 
         window.onload = () => { initBg(); setupPWA(); };
         window.onresize = () => { document.getElementById('bg-container').innerHTML = ''; initBg(); };
+        // --- PWA INSTALL LOGIC ---
+let deferredPrompt;
+const installBtn = document.getElementById('install-button');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Предотвратяваме автоматичното показване на системния диалог
+    e.preventDefault();
+    // Запазваме събитието, за да го задействаме по-късно
+    deferredPrompt = e;
+    // Показваме нашия бутон за инсталиране
+    installBtn.classList.remove('hidden');
+});
+
+installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    
+    // Показваме системния прозорец за инсталация
+    deferredPrompt.prompt();
+    
+    // Чакаме отговора на потребителя
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+        console.log('Потребителят инсталира приложението');
+    }
+    
+    // Скриваме бутона, тъй като вече е използван
+    deferredPrompt = null;
+    installBtn.classList.add('hidden');
+});
+
+// Скриване на бутона, ако приложението вече е инсталирано
+window.addEventListener('appinstalled', () => {
+    installBtn.classList.add('hidden');
+    deferredPrompt = null;
+});
+
     </script>
 </body>
 </html>
